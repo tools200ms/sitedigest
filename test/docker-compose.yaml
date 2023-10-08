@@ -1,0 +1,26 @@
+version: '3.9'
+
+networks:
+  sdtest-net:
+    external: false
+
+services:
+  db:
+    image: 200ms/mariadb_dev2
+    volumes:
+      - ./data/dbdump:/dbdump
+    networks:
+      - sdtest-net
+  httpd:
+    image: 200ms/phpapache_dev2
+    ports:
+      - 8080:80
+    volumes:
+      - ./data/html:/code
+    environment:
+      - HUID=1000
+    cap_add: ['SYS_ADMIN']
+    devices:
+      - /dev/fuse
+    networks:
+      - sdtest-net
